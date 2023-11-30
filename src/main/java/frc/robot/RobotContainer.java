@@ -55,6 +55,7 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
           true, false), m_robotDrive);
     // Configure default commands
+    m_robotDrive.setDefaultCommand(driveCommand);
   }
 
   /**
