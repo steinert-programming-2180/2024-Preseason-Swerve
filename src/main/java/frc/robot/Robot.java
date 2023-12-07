@@ -37,10 +37,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-  
+    // autonomous chooser on the dashboard.  
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putBoolean("Command exits", m_robotContainer.getAutonomousCommand()!=null);
   }
 
   /**
@@ -80,7 +78,6 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      SmartDashboard.putBoolean("Command exits", m_autonomousCommand!=null);
       m_autonomousCommand.schedule();
     }
   }
@@ -103,21 +100,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // double xT = xboxController.getLeftX();
-    // double yT = xboxController.getLeftY();
-    // double rot = xboxController.getRightX();
-    // drivetrain.drive(
-    //   -MathUtil.applyDeadband(xT * OIConstants.kDrivingSenseY, OIConstants.kDriveDeadbandY),
-    //   -MathUtil.applyDeadband(yT * OIConstants.kDrivingSenseX, OIConstants.kDriveDeadbandX),
-    //   -MathUtil.applyDeadband(rot * OIConstants.kDrivingSenseR, OIConstants.kDriveDeadband),
-    //   true,
-    //   true
-    // );
-
-    // new JoystickButton(xboxController, Button.kA.value)
-    //     .whileTrue(new RunCommand(
-    //         () -> drivetrain.setX(),
-    //         drivetrain));
+    
   }
 
   @Override
