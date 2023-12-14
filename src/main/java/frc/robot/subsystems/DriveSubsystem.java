@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
+  private static int gearLevel = 0;
+
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
@@ -82,10 +84,13 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
 
-        SmartDashboard.putNumber("Corner Front Right", m_frontLeft.getAngle());
-        SmartDashboard.putNumber("Corner Front Left", m_frontLeft.getAngle());
-        SmartDashboard.putNumber("Corner Back Right", m_rearLeft.getAngle());
-        SmartDashboard.putNumber("Corner Back Left", m_rearRight.getAngle());
+    SmartDashboard.putNumber("Corner Front Right", m_frontLeft.getAngle());
+    SmartDashboard.putNumber("Corner Front Left", m_frontLeft.getAngle());
+    SmartDashboard.putNumber("Corner Back Right", m_rearLeft.getAngle());
+    SmartDashboard.putNumber("Corner Back Left", m_rearRight.getAngle());
+    SmartDashboard.putNumber("L ratio", DriveConstants.speeds[gearLevel]);
+    SmartDashboard.putNumber("L Index", gearLevel);
+
   }
 
   /**
@@ -114,6 +119,21 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+  synchronized public void gearUp() throws InterruptedException {
+    int len = DriveConstants.speeds.length;
+    if (gearLevel >= len - 1) return;
+
+    gearLevel++;
+    Thread.sleep(100);
+  }
+
+  synchronized public void gearDown() throws InterruptedException {
+    if (gearLevel == 0) return;
+
+    gearLevel -= 1;
+    Thread.sleep(100);
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -124,9 +144,14 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean gearRedpective) {
     double xSpeedCommanded;
     double ySpeedCommanded;
+
+    if (gearRedpective) {
+      xSpeed = xSpeed * DriveConstants.speeds[gearLevel];
+      ySpeed = ySpeed * DriveConstants.speeds[gearLevel];
+    }
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -192,8 +217,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
-
-    // SmartDashboard.putNumber("is updating", 69);
   }
 
   /**

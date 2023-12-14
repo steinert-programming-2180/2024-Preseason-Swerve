@@ -14,7 +14,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -53,7 +53,7 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
           -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
           -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-          true, false), m_robotDrive);
+          true, false, true), m_robotDrive);
     // Configure default commands
     m_robotDrive.setDefaultCommand(driveCommand);
   }
@@ -68,10 +68,33 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+      .whileTrue(new RunCommand(
+        () -> m_robotDrive.setX(),
+        m_robotDrive
+      )
+    );
+    
+        
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+      .whileTrue(new RunCommand(() -> {
+        try {
+          m_robotDrive.gearDown();
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }, m_robotDrive));
+
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
+      .whileTrue(new RunCommand(() -> {
+        try {
+          m_robotDrive.gearUp();
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }, m_robotDrive));
   }
 
   /**
